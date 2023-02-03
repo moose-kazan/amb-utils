@@ -27,3 +27,8 @@ Build instructions
 1. Install golang
 2. Clone this repository
 3. Run ``make``
+
+Contacts
+--------
+Author: Vadim Kalinnikov
+E-mail: moose@ylsoftware.com

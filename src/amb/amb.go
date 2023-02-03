@@ -1,5 +1,11 @@
 package amb
 
+/*
+ * Copyright (C) 2023 Vadim Kalinnikov <moose@ylsoftware.com>
+ * This code published under terms of LGPL-2.1
+ * GIthub repo: https://github.com/moose-kazan/amb-utils
+ */
+
 import (
 	"encoding/binary"
 	"errors"
