@@ -16,7 +16,9 @@ type AmbFile struct {
 type AmbFileInterface interface {
 	LoadFile() error
 	InitCharMap()
+	HasEntry(name string) bool
 	GetEntryRaw(name string) ([]byte, error)
+	GetEntry(name string) ([]byte, error)
 }
 
 func New(fileName string) *AmbFile {
@@ -58,7 +60,7 @@ func (a *AmbFile) LoadFile() error {
 		for j := entryOffset; j < entryOffset+12 && data[j] != 0; j++ {
 			entryName += string(data[j])
 		}
-		entryName = strings.ToUpper(entryName)
+		entryName = strings.ToLower(entryName)
 
 		// Entry data
 		entryFileOffset := int(binary.LittleEndian.Uint32(data[entryOffset+12 : entryOffset+16]))
@@ -87,9 +89,31 @@ func (a *AmbFile) ListNames() []string {
 	return rv
 }
 
+func (a *AmbFile) HasEntry(name string) bool {
+	if _, ok := a.entries[name]; ok {
+		return true
+	}
+	return false
+}
+
 func (a *AmbFile) GetEntryRaw(name string) ([]byte, error) {
 	if entry, ok := a.entries[name]; ok {
 		return entry, nil
+	}
+	return make([]byte, 0), errors.New("Entry not found")
+}
+
+func (a *AmbFile) GetEntry(name string) ([]byte, error) {
+	if entry, ok := a.entries[name]; ok {
+		var rv []rune
+		for _, c := range entry {
+			if c < 128 {
+				rv = append(rv, rune(c))
+			} else {
+				rv = append(rv, rune(a.charMap[c-128]))
+			}
+		}
+		return []byte(string(rv)), nil
 	}
 	return make([]byte, 0), errors.New("Entry not found")
 }

@@ -14,13 +14,12 @@ Utils description
 Existing utils:
 
 * ``ambunpack``: unpack AMB-file into directory
+* ``amb2html``: convert AMB-file to HTML file
 
 
 Planned utils:
 
 * ``amb2fb2``: convert AMB-file to FB2 book
-* ``amb2html``: convert AMB-file to HTML file
-
 
 Build instructions
 ------------------
