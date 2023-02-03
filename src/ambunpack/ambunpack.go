@@ -33,7 +33,7 @@ func main() {
 	for _, name := range entryNames {
 		fmt.Printf("Processing file %12s: ", name)
 		dstFile := dirNameOut + name
-		entry, _ := f.GetEntry(name)
+		entry, _ := f.GetEntryRaw(name)
 		err := ioutil.WriteFile(dstFile, entry, 0644)
 		if err != nil {
 			fmt.Print("Can't write file!\n")

@@ -87,7 +87,7 @@ func (a *AmbFile) ListNames() []string {
 	return rv
 }
 
-func (a *AmbFile) GetEntry(name string) ([]byte, error) {
+func (a *AmbFile) GetEntryRaw(name string) ([]byte, error) {
 	if entry, ok := a.entries[name]; ok {
 		return entry, nil
 	}
