@@ -14,7 +14,7 @@ Utils description
 Existing utils:
 
 * ``ambunpack``: unpack AMB-file into directory
-* ``amb2html``: convert AMB-file to HTML file
+* ``amb2html``: convert AMB-file into set of HTML files
 
 
 Planned utils:
