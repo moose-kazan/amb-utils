@@ -9,6 +9,7 @@ package amb
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"strings"
 )
@@ -25,6 +26,7 @@ type AmbFileInterface interface {
 	HasEntry(name string) bool
 	GetEntryRaw(name string) ([]byte, error)
 	GetEntry(name string) ([]byte, error)
+	BSDSum(data []byte) int
 }
 
 func New(fileName string) *AmbFile {
@@ -71,10 +73,17 @@ func (a *AmbFile) LoadFile() error {
 		// Entry data
 		entryFileOffset := int(binary.LittleEndian.Uint32(data[entryOffset+12 : entryOffset+16]))
 		entryFileLength := int(binary.LittleEndian.Uint16(data[entryOffset+16 : entryOffset+18]))
+		entryCkSum := uint16(binary.LittleEndian.Uint16(data[entryOffset+18 : entryOffset+20]))
 		entryData := data[entryFileOffset : entryFileOffset+entryFileLength]
+
+		// Check BSD sum of entry
+		if entryCkSum != a.BSDSum(entryData) {
+			return errors.New(fmt.Sprintf("Bad checksum of entry \"%s\"!", entryName))
+		}
 
 		// Put entry into entries-list
 		a.entries[entryName] = entryData
+
 	}
 
 	// Load charMap if exists
@@ -122,4 +131,13 @@ func (a *AmbFile) GetEntry(name string) ([]byte, error) {
 		return []byte(string(rv)), nil
 	}
 	return make([]byte, 0), errors.New("Entry not found")
+}
+
+// Implements BSD "sum" hash
+func (a *AmbFile) BSDSum(data []byte) uint16 {
+	var sum uint16
+	for _, b := range data {
+		sum = (sum >> 1) + (sum << 15) + uint16(b)
+	}
+	return sum
 }
