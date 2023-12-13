@@ -1,13 +1,19 @@
 .PHONY: all binary man
 
-PREFIX=/usr/local/
+PREFIX := /usr/local/
+PWD := $(shell pwd)
+
+ifeq ($(OS),Windows_NT)
+	EXEEXT := .exe
+endif
+
 
 all: binary man
 
 binary:
 	mkdir -p ${PWD}/build/bin
-	cd ${PWD}/src && go build -o ${PWD}/build/bin/ambunpack ./ambunpack/ambunpack.go
-	cd ${PWD}/src && go build -o ${PWD}/build/bin/amb2html ./amb2html/amb2html.go
+	cd ${PWD}/src && go build -o ${PWD}/build/bin/ambunpack${EXEEXT} ./ambunpack/ambunpack.go
+	cd ${PWD}/src && go build -o ${PWD}/build/bin/amb2html${EXEEXT} ./amb2html/amb2html.go
 
 man:
 	mkdir -p ${PWD}/build/man
